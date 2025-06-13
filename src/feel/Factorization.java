@@ -19,9 +19,10 @@ public class Factorization {
             System.out.println(p);
         }
     }
+
     static void factor(BigInteger n, List<BigInteger> factors) {
         if (n.compareTo(BigInteger.ONE) <= 0) return;
-        if (n.isProbablePrime(30)){
+        if (n.isProbablePrime(30)) {
             factors.add(n);
         } else {
             BigInteger d = pollardsRho(n);
@@ -31,20 +32,30 @@ public class Factorization {
     }
 
     static BigInteger pollardsRho(BigInteger n) {
-        if(n.mod(BigInteger.TWO).equals(BigInteger.ZERO)) return BigInteger.TWO;
-        BigInteger x = new BigInteger(n.bitLength(), rand).mod(n);
-        BigInteger y =x;
-        BigInteger c = new BigInteger(n.bitLength(), rand).mod(n);
-        if(c.equals(BigInteger.ZERO)) return BigInteger.ONE;
-        BigInteger d = BigInteger.ONE;
+        if (n.mod(BigInteger.TWO).equals(BigInteger.ZERO))
+            return BigInteger.TWO;
 
-        while (d.equals(BigInteger.ONE)){
-            x = x.multiply(x).mod(n).add(n).mod(n);
-            y = y.multiply(y).mod(n).add(n).mod(n);
-            y = y.multiply(y).mod(n).add(n).mod(n);
-            d = x.subtract(y).abs().gcd(n);
-            if(d.equals(n)) return  pollardsRho(n);
+        // 무작위 초기값 x, y, 상수 c
+        BigInteger x = new BigInteger(n.bitLength(), rand).mod(n);
+        BigInteger y = x;
+        BigInteger c = new BigInteger(n.bitLength(), rand).mod(n);
+        // c가 0이면 1로 설정
+        if (c.equals(BigInteger.ZERO)) {
+            c = BigInteger.ONE;
         }
-        return  d;
+
+        BigInteger d = BigInteger.ONE;
+        // f(z) = z^2 + c (mod n)
+        while (d.equals(BigInteger.ONE)) {
+            x = x.multiply(x).mod(n).add(c).mod(n);
+            y = y.multiply(y).mod(n).add(c).mod(n);
+            y = y.multiply(y).mod(n).add(c).mod(n);
+            d = x.subtract(y).abs().gcd(n);
+            // 실패 시 재시도
+            if (d.equals(n)) {
+                return pollardsRho(n);
+            }
+        }
+        return d;
     }
 }
