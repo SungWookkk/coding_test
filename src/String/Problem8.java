@@ -6,13 +6,13 @@ public class Problem8 {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
 
-        String s = sc.nextLine();
+        String line = sc.nextLine().trim();
         sc.close();
 
-        String[] words = s.split(" ");
+        String[] words = line.isEmpty()
+                ? new String[0]
+                : line.split(" ");
 
-        int count = words.length;
-
-        System.out.println(count);
+        System.out.println(words.length);
     }
 }
