@@ -16,7 +16,7 @@ public class Problem5 {
         int end = 1;
         int step = 6;
 
-        while (end <= n) {
+        while (end < n) {
             end += step;
             count++;
             step += 6;
